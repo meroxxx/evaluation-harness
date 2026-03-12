@@ -28,7 +28,7 @@ response = requests.post("http://127.0.0.1:8000/evaluate", json=request_data)
 # 5. Смотрим результат
 if response.status_code == 200:
     metrics = response.json()
-    print("✅ Тест успешен! Метрики:")
+    print("Тест успешен! Метрики:")
     print(f"Accuracy:  {metrics['accuracy']:.4f}")
     print(f"Precision: {metrics['precision']:.4f}")
     print(f"Recall:    {metrics['recall']:.4f}")
@@ -37,5 +37,5 @@ if response.status_code == 200:
     print(f"FAR:       {metrics['far']:.4f}")
     print(f"FRR:       {metrics['frr']:.4f}")
 else:
-    print(f"❌ Ошибка: {response.status_code}")
+    print(f"Ошибка: {response.status_code}")
     print(response.text)
