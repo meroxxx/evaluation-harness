@@ -3,7 +3,7 @@ name: Pylint
 on:
   push:
   workflow_dispatch:
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,6 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install -r "MossoMm API for now/requirements"
         pip install pylint
     - name: Analysing the code with pylint
       run: |
