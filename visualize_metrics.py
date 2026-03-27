@@ -26,7 +26,18 @@ for metric in metrics:
     
     plt.title(f"{metric.upper()} Comparison", fontsize=14, fontweight='bold')
     plt.ylabel(metric)
-    plt.ylim(0, 1)
+    
+
+    current_vals = df_sorted[metric].dropna()
+    if len(current_vals) > 1:
+        min_v, max_v = current_vals.min(), current_vals.max()
+
+        if max_v - min_v < 0.1 and max_v > 0.7:
+            padding = (max_v - min_v) 
+            plt.ylim(max(0, min_v - padding), min(1.0, max_v + padding * 0.5))
+        else:
+            plt.ylim(0, 1) 
+        
     plt.grid(axis="y", alpha=0.3)
     plt.legend()
     
@@ -99,10 +110,26 @@ if len(available_metrics) >= 2 and len(df) >= 2:
         ax.axvline(x=avg, color='red', linestyle='--', alpha=0.5, linewidth=1)
         
         for i, (idx_row, row) in enumerate(df_sorted.iterrows()):
-            ax.text(row[metric] + 0.02, i, f'{row[metric]:.4f}',
-                   va='center', fontsize=9, fontweight='bold')
+            ax.text(row[metric] +0.02, i, f'{row[metric]:.4f}',
+                   va='center', fontsize=9, fontweight='bold',clip_on=True)
         
-        ax.set_xlim(0, 1.1)
+
+        vals = df_sorted[metric].dropna()
+        if len(vals) > 1:
+            min_v, max_v = vals.min(), vals.max()
+            span = max_v - min_v
+            
+            if span < 0.05:
+                pad = span * 5 if span > 0 else 0.02
+                ax.set_xlim(
+                    max(0, min_v - pad), 
+                    min(1.001, max_v + pad * 1.5)  
+                )
+            else:
+                ax.set_xlim(0, 1.1)
+        else:
+            ax.set_xlim(0, 1.1)
+
         ax.set_title(metric.upper(), fontsize=11, fontweight='bold')
         ax.grid(axis='x', alpha=0.3)
         ax.set_xlabel('Score', fontsize=9)
